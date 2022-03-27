@@ -1,0 +1,13 @@
+{{ site }} Новость: {{ news.header }}
+
+    Здравствуйте, {{ user }}!
+    Свежая новость с нашего сайта:
+
+    {{ news.header }}
+    Дата: {{ news.creation_time|date:'d.m.Y G:i' }}
+
+    {{ news.news|striptags|truncatewords:40 }}
+
+    Читать на сайте: {{ url }}
+    
+    С уважением, команда сайта {{ site }}.

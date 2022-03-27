@@ -1,0 +1,46 @@
+{% extends 'flatpages/default.html' %}
+
+{% block head_title %}
+Удаление объявления
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Вы уверены, что хотите удалить объявление?</h1>
+    <hr>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    Категория
+                </td>
+                <td>
+                    Время создания
+                </td>
+                <td>
+                    Заголовок
+                </td>
+                <td>
+                    Объявление
+                </td>
+            </tr>
+        </thead>
+        <tr>
+            <td>
+                {{ ad_delete.category_id }}
+            </td>
+            <td>
+                {{ ad_delete.creation_time|date:'d.m.Y G:i' }}
+            </td>
+            <td>
+                {{ ad_delete.header|truncatechars:50 }}
+            </td>
+            <td>
+                {{ ad_delete.ad|striptags|truncatewords:20 }}
+            </td>
+        </tr>
+    </table>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Подтвердить">
+    </form>
+{% endblock body %}

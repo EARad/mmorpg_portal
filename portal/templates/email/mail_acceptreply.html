@@ -1,0 +1,14 @@
+{% extends 'email/mail_base.html' %}
+
+{% block head_title %}
+{{ site }} Ваш отзыв подтвержден!
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Здравствуйте, {{ reply.user_id.email }}!</h1>
+    <p>Ваш отзыв на <a href="{{ url }}">объявление</a> подтвержден!</p>
+    <p>Дата отзыва: {{ reply.creation_time|date:'d.m.Y G:i' }}</p>
+    <p>Ваш отзыв: {{ reply.reply }}</p>
+    <p>Заголовок объявления: {{ reply.ad_id.header }}</p>
+    <p>С уважением, команда сайта {{ site }}.</p>
+{% endblock body %}

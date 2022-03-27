@@ -1,0 +1,28 @@
+{% extends 'flatpages/default.html' %}
+
+{% load account %}
+
+{% block head_title %}
+Объявление
+{% endblock head_title %}
+
+{% block body %}
+    <h1>{{ ad.header }}</h1>
+
+    <h5>{{ ad.category_id }}</h5>
+
+    <h6>{{ ad.creation_time|date:'d.m.Y G:i' }}</h6>
+    <p>{{ ad.ad|safe }}</p>
+    <h6>Автор: {{ ad.user_id.email }}</h6>
+    {% if user.is_authenticated %}
+        <div>
+            <button><a href="{% url 'reply_create_view' ad.id %}">Отозваться</a></button>
+            {% if user.id == ad.user_id.id %}
+                <button><a href="{% url 'ad_edit_view' ad.id %}">Редактировать</a></button>
+                <button><a href="{% url 'ad_delete_view' ad.id %}">Удалить</a></button>
+            {% endif %}
+        </div>
+    {% endif %}
+    <hr>
+
+{% endblock body %}

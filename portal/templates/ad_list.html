@@ -1,0 +1,61 @@
+{% extends 'flatpages/default.html' %}
+
+{% load url_filters %}
+
+{% block head_title %}
+Все объявления
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Все объявления</h1>
+    <hr>
+
+    {% if page_obj %}
+        <table style='width: 100%'>
+            <thead>
+                <tr>
+                    <td style='width: 10%'>
+                        Время создания
+                    </td>
+                    <td style='width: 10%'>
+                        Категория
+                    </td>
+                    <td style='width: 15%'>
+                        Заголовок
+                    </td>
+                    <td style='width: 55%'>
+                        Объявление
+                    </td>
+                    <td style='width: 10%'>
+                        Автор
+                    </td>
+                </tr>
+            </thead>
+            {% for ad in page_obj %}
+                <tr>
+                    <td>
+                        {{ ad.creation_time|date:'d.m.Y G:i' }}
+                    </td>
+                    <td>
+                        {{ ad.category_id }}
+                    </td>
+                    <td>
+                        <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header|truncatechars:50 }}</a>
+                    </td>
+                    <td>
+                        {{ ad.ad|striptags|truncatewords:20 }}
+                    </td>
+                    <td>
+                        {{ ad.user_id.email }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% block paginator %}
+            {{ block.super }}
+        {% endblock paginator %}
+    {% else %}
+        <h2>Нет объявлений!</h2>
+    {% endif %}
+
+{% endblock body %}

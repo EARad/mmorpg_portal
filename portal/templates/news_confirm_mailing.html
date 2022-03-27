@@ -1,0 +1,22 @@
+{% extends 'news_detail.html' %}
+
+{% load account %}
+
+{% block head_title %}
+Подтвердить рассылку
+{% endblock head_title %}
+
+{% block body %}
+    <p>Вы действительно хотите разослать эту новость?</p>
+    <hr>
+    {% block body_top %}
+        {% if perms.board.create_news %}
+            <div>
+                <button><a href="{% url 'news_confirm_mailing_button' news.id %}">Разослать</a></button>
+            </div>
+        {% endif %}
+    {% endblock body_top %}
+    {% block body_news %}
+        {{ block.super }}
+    {% endblock body_news %}
+{% endblock body %}

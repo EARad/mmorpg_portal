@@ -1,0 +1,55 @@
+{% extends 'flatpages/default.html' %}
+
+{% load url_filters %}
+
+{% block head_title %}
+Мои отклики
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Мои отклики</h1>
+    <hr>
+
+    {% if page_obj %}
+        <table style='width: 100%'>
+            <thead>
+                <tr>
+                    <td style='width: 10%'>
+                        Время создания
+                    </td>
+                    <td style='width: 10%'>
+                        Статус
+                    </td>
+                    <td style='width: 60%'>
+                        Отзыв
+                    </td>
+                    <td style='width: 20%'>
+                        Объявление
+                    </td>
+                </tr>
+            </thead>
+                {% for reply in page_obj %}
+                    <tr>
+                        <td>
+                            {{ reply.creation_time|date:'d.m.Y G:i' }}
+                        </td>
+                        <td>
+                            {{ reply.is_approved|yesno:'Подтвержден,На рассмотрении'}}
+                        </td>
+                        <td>
+                            {{ reply.reply }}
+                        </td>
+                        <td>
+                            <a href="{% url 'ad_detail_view' reply.ad_id.id %}">{{ reply.ad_id.header }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+        </table>
+        {% block paginator %}
+            {{ block.super }}
+        {% endblock paginator %}
+    {% else %}
+        <h2>Нет откликов!</h2>
+    {% endif %}
+
+{% endblock body %}

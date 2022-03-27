@@ -1,0 +1,161 @@
+{% load static %}
+{% load account %}
+{% load url_filters %}
+
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        {% block head_title %}
+        {% endblock head_title %}
+    </title>
+    {% block extra_head %}
+    {% endblock extra_head %}
+    
+    <!-- favicon -->
+    <link rel=icon href="{% static 'assets/img/favicon.png' %}" sizes="20x20" type="image/png">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{% static 'assets/css/vendor.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
+
+</head>
+<body>
+
+    <!-- preloader area start -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-inner">
+            <div class="spinner">
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- header start -->
+    <div class="navbar-area">
+        <!-- topbar start-->
+        <div class="topbar-area">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-7 align-self-center">
+                        <div class="topbar-menu text-md-left text-center">
+                            <ul class="align-self-center">
+                                {% if user.is_authenticated %}
+                                    <li>{% user_display user %}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-5 mt-2 mt-md-0 text-md-right text-center">
+                        <div class="topbar-menu text-md-rigth text-center">
+                            <ul class="align-self-center">
+                                {% if user.is_authenticated %}
+                                    <li><a href="{% url 'ad_filtered_view' %}">Отклики на мои объявления</a></li>
+                                    <li><a href="{% url 'reply_list_view' %}">Мои отклики</a></li>
+                                    <li><a href="{% url 'account_email' %}">Изменить адрес почты</a></li>
+                                    <li><a href="{% url 'account_logout' %}">Выйти</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'account_login' %}">Войти</a></li>
+                                    <li><a href="{% url 'account_signup' %}">Зарегистрироваться</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- topbar end-->
+
+
+        <!-- navbar start -->
+        <nav class="navbar navbar-expand-lg">
+            <div class="container nav-container">
+                <div class="responsive-mobile-menu">
+                    <div class="logo d-lg-none d-block">
+                        <p class="main-logo"></p>
+                    </div>
+                    <button class="menu toggle-btn d-block d-lg-none" data-target="#nextpage_main_menu" 
+                    aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-left"></span>
+                        <span class="icon-right"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="nextpage_main_menu">
+                    <ul class="navbar-nav menu-open">
+                        <li class="current-menu-item">
+                            <a href="{% url 'news_list_view' %}">Новости</a>
+                        </li>                        
+                        <li class="current-menu-item">
+                            <a href="{% url 'ad_list_view' %}">Объявления</a>
+                        </li>                        
+                        {% block menu2 %}
+                            {% if perms.board.add_news %}
+                                <li class="current-menu-item">
+                                    <a href="{% url 'news_create_view' %}">Создать новость</a>
+                                </li>                        
+                            {% endif %}
+                            {% if user.is_authenticated %}
+                                <li class="current-menu-item">
+                                    <a href="{% url 'ad_create_view' %}">Написать объявление</a>
+                                </li>                        
+                            {% endif %}
+                        {% endblock menu2 %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- navbar end -->
+    </div>
+
+    <div style="margin: 3%;">
+    {% block body %}
+        {{ flatpage.content }}
+        {% block paginator %}
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                    <a href="{{ request.get_full_path|add_page_tag:'1' }}">Первая</a>
+                    &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:page_obj.previous_page_number }}"><<<</a>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        &nbsp;&nbsp;&nbsp;<a>{{ num }}</a>
+                    {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+                        &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:num }}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:page_obj.next_page_number }}">>>></a>
+                    &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:page_obj.paginator.num_pages }}">Последняя</a>
+                {% endif %}
+            {% endif %}
+        {% endblock paginator %}
+    {% endblock body %}
+    </div>
+
+    <div class="footer-area bg-black pd-top-95">
+        <div class="container">
+            <div class="row">
+            </div>
+            <div class="footer-bottom text-center">
+            </div>
+        </div>
+    </div>
+
+    <!-- back to top area start -->
+    <div class="back-to-top">
+        <span class="back-top"><i class="fa fa-angle-up"></i></span>
+    </div>
+    <!-- back to top area end -->
+
+    <!-- all plugins here -->
+    <script src="{% static 'assets/js/vendor.js' %}"></script>
+    <!-- main js  -->
+    <script src="{% static 'assets/js/main.js' %}"></script>
+</body>
+</html>

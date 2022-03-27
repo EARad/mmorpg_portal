@@ -1,0 +1,44 @@
+{% extends 'flatpages/default.html' %}
+{% load account %}
+{% load url_filters %}
+
+{% block head_title %}
+Все новости
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Все новости</h1>
+    {% if user.is_authenticated %}
+        {% if in_mailing_list %}
+            <div>
+                <button><a href="{% url 'news_unsubscribe_button' %}">Отписаться от рассылки новостей</a></button>
+            </div>
+        {% else %}
+            <div>
+                <button><a href="{% url 'news_subscribe_button' %}">Подписаться на рассылку новостей</a></button>
+            </div>
+        {% endif %}
+    {% endif %}
+    <hr>
+    {% if page_obj %}
+        {% for news in page_obj %}
+            <h5>
+                <a href="{% url 'news_detail_view' news.id %}">{{ news.header }}</a>
+            </h5>
+            <p>
+                {{ news.creation_time|date:'d.m.Y G:i' }}
+                автор: {{ news.user_id.email }}
+            </p>
+            <p>
+                {{ news.news|striptags|truncatewords:60 }}
+            </p>
+            <hr>
+        {% endfor %}
+        {% block paginator %}
+            {{ block.super }}
+        {% endblock paginator %}
+    {% else %}
+        <h2>Нет новостей!</h2>
+    {% endif %}
+
+{% endblock body %}

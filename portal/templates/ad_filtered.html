@@ -1,0 +1,162 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Отклики на мои объявления
+{% endblock title %}
+
+{% block head_title %}
+Отклики на мои объявления
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Отклики на мои объявления</h1>
+
+    <h2>Фильтр по объявлениям</h2>
+    <form method="GET">
+        {{ filter.form.as_p }}
+        <input type="submit" value="Найти">
+    </form>
+    <hr>
+
+    {% if page_obj %}
+        {% comment %} {% for ad in page_obj %}
+            <h3>
+                <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header|truncatechars:50 }}</a>
+            </h3>
+            <p>
+                {{ ad.category_id }}
+            </p>
+            <p>
+                {{ ad.creation_time|date:'d.m.Y G:i' }}
+            </p>
+            <p>
+                {{ ad.ad|striptags|truncatewords:70 }}
+            </p>
+
+            {% if reply_list %}
+                <table>
+                {% for reply in reply_list %}
+                    {% if reply.ad_id.id == ad.id %}
+                        <tr>
+                            <td>
+                                {% if not reply.is_approved %}
+                                    <div>
+                                        <button><a href="{% url 'reply_approve_view' reply.id %}">Подтвердить</a></button>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ reply.user_id.email }}
+                            </td>
+                            <td>
+                                {{ reply.creation_time }}
+                            </td>
+                            <td>
+                                {{ reply.reply }}
+                            </td>
+                            <td>
+                                {% if not reply.is_approved %}
+                                    <div>
+                                        <button><a href="{% url 'reply_delete_view' reply.id %}">Удалить</a></button>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </table>
+            {% endif %}
+            <hr>
+        {% endfor %} {% endcomment %}
+        {% for ad in page_obj %}
+            {% if ad.reply__is_approved != None %}
+                <h5>
+                    Отклик
+                </h5>
+                <p>
+                    {{ ad.reply__user_id__email }}
+                    {{ ad.reply__creation_time }}
+                </p>
+                <p>
+                    {{ ad.reply__reply }}
+                </p>
+                {% if not ad.reply__is_approved %}
+                    <p> <b>Статус:</b>
+                        <div>
+                            <button><a href="{% url 'reply_approve_view' ad.reply__id %}">Подтвердить</a></button>
+                            <button><a href="{% url 'reply_delete_view' ad.reply__id %}">Удалить</a></button>
+                        </div>
+                    </p>
+                {% else %}
+                    <p> <b>Статус:</b>
+                        Подтвержден
+                    </p>
+                {% endif %}
+            {% else %}
+                <h5>
+                    Нет откликов
+                </h5>
+            {% endif %}
+            <h5>
+                Для объявления
+            </h5>
+            <p>
+                {{ ad.category_id__name }}
+                {{ ad.creation_time|date:'d.m.Y G:i' }}
+                {{ ad.user_id__email }}
+            </p>
+            <h6>
+                <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header }}</a>
+            </h6>
+            <p>
+                {{ ad.ad|striptags|truncatewords:30 }}
+            </p>
+            <hr>
+            {% comment %} <h5>
+                Объявление
+            </h5>
+            <h4>
+                <a href="{% url 'ad_detail_view' reply.ad_id.id %}">{{ reply.ad_id.header|truncatechars:50 }}</a>
+            </h4>
+            <p>
+                {{ reply.ad_id.category_id }}
+                {{ reply.ad_id.creation_time|date:'d.m.Y G:i' }}
+                {{ reply.ad_id.user_id.email }}
+            </p>
+            <p>
+                {{ reply.ad_id.ad|striptags|truncatewords:70 }}
+            </p>
+            <h5>
+                Отзыв
+            </h5>
+            {% if not reply.is_approved %}
+                <p>
+                    <div>
+                        <button><a href="{% url 'reply_approve_view' reply.id %}">Подтвердить</a></button>
+                    </div>
+                </p>
+            {% endif %}
+            <p>
+                {{ reply.user_id.email }}
+                {{ reply.creation_time }}
+            </p>
+            <p>
+                {{ reply.reply }}
+            </p>
+            <p>
+                {% if not reply.is_approved %}
+                    <div>
+                        <button><a href="{% url 'reply_delete_view' reply.id %}">Удалить</a></button>
+                    </div>
+                {% endif %}
+            </p>
+            <hr> {% endcomment %}
+        {% endfor %}
+        {% block paginator %}
+            {{ block.super }}
+        {% endblock paginator %}
+    {% else %}
+        <h2>Нет откликов и объявлений!</h2>
+    {% endif %}
+
+{% endblock body %}

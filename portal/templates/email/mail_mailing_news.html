@@ -1,0 +1,15 @@
+{% extends 'email/mail_base.html' %}
+
+{% block head_title %}
+{{ site }} Новость: {{ news.header }}
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Здравствуйте, {{ user }}!</h1>
+    <p>Свежая новость с нашего сайта:</p>
+    <h3>{{ news.header }}</h3>
+    <p>Дата: {{ news.creation_time|date:'d.m.Y G:i' }}</p>
+    <p>{{ news.news|safe|truncatewords:40 }}</p>
+    <p><a href="{{ url }}">Читать на сайте</a></p>
+    <p>С уважением, команда сайта {{ site }}.</p>
+{% endblock body %}

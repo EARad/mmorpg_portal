@@ -1,0 +1,20 @@
+{% extends 'flatpages/default.html' %}
+
+{% block head_title %}
+Удаление отклика
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Вы уверены, что хотите удалить отклик?</h1>
+    <hr>
+    <p>{{ reply_delete.creation_time|date:'d.m.Y G:i' }}</p>
+    <p>{{ reply_delete.reply }}</p>
+    <p>{{ reply_delete.user_id.email }}</p>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Подтвердить">
+    </form>
+    <hr>
+    <p>Объявление:</p>
+    <p><a href="{% url 'ad_detail_view' reply_delete.ad_id.id %}">{{ reply_delete.ad_id.header }}</a></p>
+{% endblock body %}

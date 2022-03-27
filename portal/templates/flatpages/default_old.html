@@ -1,0 +1,69 @@
+{% load static %}
+{% load account %}
+{% load url_filters %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>
+            {% block head_title %}
+            {% endblock head_title %}
+        </title>
+        {% block extra_head %}
+        {% endblock extra_head %}
+    </head>
+    <body>
+        <nav>
+            <div><a href="{% url 'news_list_view' %}">Новости</a></div>
+            <div><a href="{% url 'ad_list_view' %}">Объявления</a></div>
+        </nav>
+        <nav>
+            {% if user.is_authenticated %}
+                <div><a href="{% url 'ad_filtered_view' %}">Мои объявления</a></div>
+                <div><a href="{% url 'reply_list_view' %}">Мои отзывы</a></div>
+                <div><a href="{% url 'account_email' %}">Изменить адрес почты</a></div>
+                <div><a href="{% url 'account_logout' %}">Выйти</a></div>
+                <div>{% user_display user %}</div>
+            {% else %}
+                <div><a href="{% url 'account_login' %}">Войти</a></div>
+                <div><a href="{% url 'account_signup' %}">Зарегистрироваться</a></div>
+            {% endif %}
+        </nav>
+        <nav>
+            {% block menu2 %}
+                {% if perms.board.add_news %}
+                    <div><a href="{% url 'news_create_view' %}">Создать новость</a></div>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <div><a href="{% url 'ad_create_view' %}">Новое объявление</a></div>
+                {% endif %}
+            {% endblock menu2 %}
+        </nav>
+        {% block body %}
+            {{ flatpage.content }}
+            {% block paginator %}
+                {% if is_paginated %}
+                    {% if page_obj.has_previous %}
+                        <a href="{{ request.get_full_path|add_page_tag:'1' }}">Первая</a>
+                        &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:page_obj.previous_page_number }}"><<<</a>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            &nbsp;&nbsp;&nbsp;<a>{{ num }}</a>
+                        {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+                            &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:page_obj.next_page_number }}">>>></a>
+                        &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:page_obj.paginator.num_pages }}">Последняя</a>
+                    {% endif %}
+                {% endif %}
+            {% endblock paginator %}
+        {% endblock body %}
+    </body>
+</html>

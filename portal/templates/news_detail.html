@@ -1,0 +1,37 @@
+{% extends 'flatpages/default.html' %}
+
+{% load account %}
+
+{% block head_title %}
+Новость
+{% endblock head_title %}
+
+{% block body %}
+    <hr>
+    {% block body_top %}
+        {% if perms.board.change_news %}
+            <div>
+                <button><a href="{% url 'news_edit_view' news.id %}">Редактировать</a></button>
+            </div>
+        {% endif %}
+        {% if perms.board.delete_news %}
+            <div>
+                <button><a href="{% url 'news_delete_view' news.id %}">Удалить</a></button>
+            </div>
+        {% endif %}
+        {% if perms.board.create_news %}
+            <div>
+                <button><a href="{% url 'news_confirm_mailing_view' news.id %}">Разослать</a></button>
+            </div>
+        {% endif %}
+    {% endblock body_top %}
+    {% block body_news %}
+        <h1>{{ news.header }}</h1>
+
+        <h6>{{ news.creation_time|date:'d.m.Y G:i' }}</h6>
+        <p>{{ news.news|safe }}</p>
+        <h6>Автор: {{ news.user_id.email }}</h6>
+        <hr>
+    {% endblock body_news %}
+
+{% endblock body %}

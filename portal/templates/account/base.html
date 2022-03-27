@@ -1,0 +1,21 @@
+{% extends 'flatpages/default.html' %}
+
+{% block body %}
+
+  {% if messages %}
+    <div>
+      <strong>Сообщения:</strong>
+      <ul>
+        {% for message in messages %}
+          <li>{{message}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% block content %}
+  {% endblock content %}
+{% endblock body %}
+
+{% block extra_body %}
+{% endblock %}

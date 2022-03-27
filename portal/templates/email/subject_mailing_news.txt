@@ -1,0 +1,1 @@
+{{ site }} Новость: {{ news.header }}

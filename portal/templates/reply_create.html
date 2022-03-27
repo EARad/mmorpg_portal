@@ -1,0 +1,16 @@
+{% extends 'flatpages/default.html' %}
+{% load static %}
+
+{% block head_title %}
+Отклик
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Редактирование отклика</h1>
+    <hr>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Сохранить изменения">
+    </form>
+{% endblock body %}

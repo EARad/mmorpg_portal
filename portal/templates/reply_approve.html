@@ -1,0 +1,29 @@
+{% extends 'flatpages/default.html' %}
+
+{% load account %}
+
+{% block head_title %}
+Подтвердить отклик
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Вы уверены, что хотите подтвердить отклик на ваше объявление?</h1>
+    <h6>{{ reply.creation_time|date:'d.m.Y G:i' }}</h6>
+    <p>{{ reply.reply }}</p>
+    <h6>Автор: {{ reply.user_id.email }}</h6>
+    {% if user.is_authenticated %}
+        {% if user.id == reply.ad_id.user_id.id %}
+            <div>
+                <button><a href="{% url 'reply_approve_button' reply.id %}">Подтвердить</a></button>
+            </div>
+        {% endif %}
+    {% endif %}
+    <hr>
+
+    <h2>Объявление</h2>
+    <h3>{{ reply.ad_id.header }}</h3>
+    <h3>Автор: {{ reply.ad_id.user_id.email }}</h3>
+    <h6>{{ reply.ad_id.creation_time|date:'d.m.Y G:i' }}</h6>
+    <p>{{ reply.ad_id.ad|safe }}</p>
+
+{% endblock body %}

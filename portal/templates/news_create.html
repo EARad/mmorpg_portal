@@ -1,0 +1,17 @@
+{% extends 'flatpages/default.html' %}
+{% load static %}
+
+{% block head_title %}
+Новость
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Редактирование новости</h1>
+    <hr>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+        <input type="submit" value="Сохранить изменения">
+    </form>
+{% endblock body %}
